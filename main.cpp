@@ -55,6 +55,10 @@ void buildFrequencyTable(int freq[], const string& filename) {
         cerr << "Error: could not open " << filename << "\n";
         exit(1);
     }
+    //testing lines
+//    cout << "Text: " << file.rdbuf() << "\n";
+//    file.clear();
+//    file.seekg(0);
 
     char ch;
     while (file.get(ch)) {
