@@ -105,21 +105,21 @@ int buildEncodingTree(int nextFree) {
     }
 
     while (minHeap.size > 1) {
-        int firstPop = minHeap.pop(weightArr);
-        int secondPop = minHeap.pop(weightArr);
+        int firstPop = minHeap.pop(weightArr); //pops the first smallest node
+        int secondPop = minHeap.pop(weightArr); //pops the second smallest node
 
-        int parentTotalWeight = weightArr[firstPop] + weightArr[secondPop];
-        int parentIndex = nextFree++;
+        int parentTotalWeight = weightArr[firstPop] + weightArr[secondPop]; //new parent node with total weight
+        int parentIndex = nextFree++; //changes the index
 
-        leftArr[parentIndex] = firstPop;
-        rightArr[parentIndex] = secondPop;
-        weightArr[parentIndex] = parentTotalWeight;
+        leftArr[parentIndex] = firstPop; //left array holds the first popped val
+        rightArr[parentIndex] = secondPop; //right array holds the second popped val
+        weightArr[parentIndex] = parentTotalWeight;//changes the weight of the parent node
 
-        minHeap.push(parentIndex, weightArr);
+        minHeap.push(parentIndex, weightArr); //pushes the heap and reorders
 
     }
-    int root = minHeap.pop(weightArr);
-    return root;
+    int root = minHeap.pop(weightArr); //int for the root
+    return root; //returns the index of the root
 }
 
 // Step 4: Use an STL stack to generate codes
@@ -128,6 +128,32 @@ void generateCodes(int root, string codes[]) {
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
+
+    stack<pair<int, string>> stack; //intialized the stack
+    stack.push({root, ""}); //pushes the root along with the space
+    while (!stack.empty()) { //traverses until the stack is empty
+        pair<int, string> p = stack.top();//grabs the top element, the node and the code
+        stack.pop(); //pops top element
+
+        int cur = p.first; //cur index
+        string curCode = p.second; //current code
+
+        int leftChild = leftArr[cur]; //left child
+        int rightChild = rightArr[cur]; //right child
+
+        if (leftChild == -1 && rightChild == -1) { //condition which checks if it is a leaf node
+            codes[cur] = curCode; //records the current code in the codes array
+        }
+        else { //if node does have children continue
+            if (rightChild != -1) { //checks right first for DFS
+                stack.push({rightChild, curCode + "1"}); //adds 1 if right
+            }
+
+            if (leftChild != -1) { //proceeds to check left
+                stack.push({leftChild, curCode + "0"}); //adds 0 if left
+            }
+        }
+    }
 }
 
 // Step 5: Print table and encoded message
